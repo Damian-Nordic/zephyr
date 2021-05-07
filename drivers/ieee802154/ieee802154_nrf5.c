@@ -40,7 +40,8 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME);
 #include <net/ieee802154_radio.h>
 
 #if defined(CONFIG_SOC_NRF5340_CPUAPP) && \
-	defined(CONFIG_TRUSTED_EXECUTION_NONSECURE)
+	defined(CONFIG_TRUSTED_EXECUTION_NONSECURE) && \
+	defined(CONFIG_SPM)
 #include <secure_services.h>
 #endif
 
