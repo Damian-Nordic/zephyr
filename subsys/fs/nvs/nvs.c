@@ -30,18 +30,10 @@ static inline uint32_t* nvs_lookup_cache_entry(struct nvs_fs *fs, uint16_t id)
 		goto end;
 	}
 
-#if CONFIG_NVS_LOOKUP_CACHE_SIZE <= (UINT8_MAX + 1)
-	/*
-	 * CRC8-CCITT is used for ATE checksums and it also acts well as a hash
-	 * function, so it can be a good choice from the code size perspective.
-	 * However, other hash functions can be used as well if proved better
-	 * performance.
-	 */
-	hash = crc8_ccitt(CRC8_CCITT_INITIAL_VALUE, &id, sizeof(id));
-#else
-	hash = crc16_ccitt(0xffff, (const uint8_t *)&id, sizeof(id));
-#endif
-
+	hash = id;
+	hash ^= hash >> 8; hash *= 0x88b5U;
+	hash ^= hash >> 7; hash *= 0xdb2dU;
+	hash ^= hash >> 9;
 end:
 	return &fs->lookup_cache[hash % CONFIG_NVS_LOOKUP_CACHE_SIZE];
 
